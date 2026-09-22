@@ -160,22 +160,22 @@ def segment_cells(
 
     # Find markers of the background and cells based on the extremes in the histogram of
     # gray scale values
-markers = np.zeros_like(grayscale_image)
-markers[grayscale_image < 90] = 1
-markers[grayscale_image > 90] = 2
+    markers = np.zeros_like(grayscale_image)
+    markers[grayscale_image < 90] = 1
+    markers[grayscale_image > 90] = 2
 
-# if make_plots:
-#     fig, ax = plt.subplots(figsize=(4, 3))
-#     ax.imshow(markers, cmap=plt.cm.nipy_spectral)
-#     ax.set_title('markers')
-#     ax.set_axis_off()
-#     plt.show()
+    # if make_plots:
+    #     fig, ax = plt.subplots(figsize=(4, 3))
+    #     ax.imshow(markers, cmap=plt.cm.nipy_spectral)
+    #     ax.set_title('markers')
+    #     ax.set_axis_off()
+    #     plt.show()
 
-# Use watershed segmentation to fill regions of the elevation map
-segmented_cells = ski.segmentation.watershed(elevation_map, markers)
+    # Use watershed segmentation to fill regions of the elevation map
+    segmented_cells = ski.segmentation.watershed(elevation_map, markers)
 
-plt.imshow(segmented_cells)
-plt.show()
+    plt.imshow(segmented_cells)
+    plt.show()
 
     if make_plots:
         fig, ax = plt.subplots(figsize = (4, 3))
@@ -213,13 +213,13 @@ def clean_segmentation(
     cells_cleaned: nd array of filled in and "cleaned" segmented image
     """
     # Fill in the segmented cells using mathematical morphology
-filled_segmented_cells = ndi.binary_fill_holes(segmented_cells - 1)
+    filled_segmented_cells = ndi.binary_fill_holes(segmented_cells - 1)
 
-# Ignore any cells that "run-off" the edge of the image
-clear_segmented_cells = ski.segmentation.clear_border(filled_segmented_cells)
+    # Ignore any cells that "run-off" the edge of the image
+    clear_segmented_cells = ski.segmentation.clear_border(filled_segmented_cells)
 
-# Remove spurious fills
-cells_cleaned = ski.morphology.remove_small_objects(clear_segmented_cells, min_size = 300)
+    # Remove spurious fills
+    cells_cleaned = ski.morphology.remove_small_objects(clear_segmented_cells, min_size = 300)
 
     if make_plots:
         fig, ax = plt.subplots(figsize = (4, 3))
